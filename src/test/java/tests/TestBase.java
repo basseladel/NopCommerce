@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -27,6 +28,12 @@ public class TestBase extends AbstractTestNGCucumberTests {
 		} else if (browserName == "firefox") {
 			System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "/drivers/chromedriver.exe");
 			driver = new ChromeDriver();
+		} else if (browserName.equalsIgnoreCase("chrome-headless")) {
+			System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/drivers/chromedriver.exe");
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("--headless");
+			options.addArguments("--window-size=1920,1080");
+			driver = new ChromeDriver(options);
 		} else {
 			System.setProperty("webdriver.edge.drive", System.getProperty("user.dir") + "/drivers/chromedriver.exe");
 			driver = new ChromeDriver();
@@ -40,8 +47,9 @@ public class TestBase extends AbstractTestNGCucumberTests {
 	public void stopDriver() {
 		driver.quit();
 	}
+
 	@AfterMethod
-	public void screenshotFaliure(ITestResult result){
+	public void screenshotFaliure(ITestResult result) {
 		if (result.getStatus() == ITestResult.FAILURE) {
 			System.out.println("Failed");
 			System.out.println("Taking Screenshot ...");
